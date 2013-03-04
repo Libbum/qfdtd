@@ -14,15 +14,6 @@ extern double ALX,ALY,ALZ;
 
 extern "C" 
 {
- void dgesv_(int *n, int *nrhs, double *a, int *lda, int *ipiv, 
-    double *b, int *ldb, int *info );
-  
- int dgetrf_(int *m, int *n, double *a, int *
-      lda, int *ipiv, int *info);
-
- int dgetri_(int *n, double *a, int *lda, int 
-      *ipiv, double *work, int *lwork, int *info);
- 
  void dgemm_(char*,char*,int*,int*,int*,double*,double*,int*,
                  double*,int*,double*,double*,int*);  
 }

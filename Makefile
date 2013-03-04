@@ -3,14 +3,13 @@ OBJ = intde2.o random.o paramreader.o grid.o outputroutines.o initialconditions.
 
 PROFILE = #-pg
 DEBUG = -Wno-deprecated #-W -Wall -g
-INCLUDES = -I include #-I/usr/local/openmpi/1.6.3-intel/include 
+INCLUDES = -I include -I$(MKL)/include 
 OPTIMIZATION = -funroll-loops -finline-functions -O2
-LAPACK = /usr/local/lapack/3.4.2/lib/liblapack.so /usr/local/blas/1.0.248/lib/libblas.so -lm  
-LIBS = -L/usr/local/lapack/3.4.2/lib
+LAPACK = -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -liomp5 -lpthread -L$(TVLIB) -ltvh
+LIBS = -L$(MKL)/lib/intel64
 CXXFLAGS = $(DEBUG) $(PROFILE) $(OPTIMIZATION) $(FLOWTRACE) $(INCLUDES) $(LIBS) 
 MPIFLAGS = $(CXXFLAGS)
 CC = mpicxx
-CXX = g++ #icpc
 
 all: $(TARGET) 
 
