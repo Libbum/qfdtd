@@ -353,7 +353,7 @@ void computeObservables(dcomp*** wfnc) {
 	MPI_Reduce(&rRMS2_im,&rRMS2_im_collect,1,MPI_DOUBLE,MPI_SUM,0,workers_comm);
 	rRMS2Collect = dcomp(rRMS2_re_collect,rRMS2_im_collect);
 
-    //break run if we have a nanError
+    //break run if we have a nanError. Use RMS as a check because energy can be both nan and inf
     if (rRMS2_re_collect/normalization_re_collect != rRMS2_re_collect/normalization_re_collect) {
             nanErrorCollect = 1;
 	if (debug) debug_out << "Nan Error Detected" << endl; 
@@ -398,7 +398,7 @@ void solve() {
 			// record and output snapshot
 	//		sprintf(label,"%d_%d",nodeID,step); 
 	//		outputSnapshot(w,label);
-                        // check convergence and break if tolerance is achieved
+            // check convergence and break if tolerance is achieved
 			// otherwise, record snapshot for use in excited state 
 			// computation and keep going
 			energytot =  energyCollect/normalizationCollect;
@@ -416,7 +416,7 @@ void solve() {
                 
 	} while ((step<=STEPS) && nanErrorCollect == 0);
 	
-	// save grd-state energy and tau_f in global variables
+	    // save grd-state energy and tau_f in global variables
         if (nanErrorCollect == 0) {
 	        EGrnd = energytot;
 	        timef = step*EPS;
@@ -428,10 +428,10 @@ void solve() {
         }
 
 	if ((nodeID==1) && (nanErrorCollect == 0)) {
-                outputSummaryData();
-        }	
+       outputSummaryData();
+    }	
 
-        free(rightSendBuffer);
+    free(rightSendBuffer);
 	free(leftSendBuffer);
 	free(rightReceiveBuffer);
 	free(leftReceiveBuffer);
@@ -443,11 +443,10 @@ void solveFinalize() {
 	
 	// this routine currently computes the first excited state energy and wavefunction
 	if (EPS >= 1e-7) {
-                findExcitedStates();
-        } else {
-                if (nodeID==1) cout << "ERROR: EPS smaller than 1e-7 will likely cause memory issues. Aborting, check input parameters" << endl;
-        }
-	//findExcitedStates();
+        findExcitedStates();
+    } else {
+        if (nodeID==1) cout << "ERROR: EPS smaller than 1e-7 will likely cause memory issues. Aborting, check input parameters" << endl;
+    }
 }
 
 // evolves solution nsteps
