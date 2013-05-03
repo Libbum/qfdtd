@@ -176,16 +176,12 @@ int main( int argc, char *argv[] )
 		// cluster is ready
 		if (debug) debug_out << "==> Cluster ready" << endl;
 	
-    // Currently the master process does nothing.  
+                // Currently the master process does nothing.  
 		// It simply starts and waits for the others
 		
 		// master loops and waits for children to report that they are done
 		checksum=0;
 		do {
-//			MPI_Recv(&nanError, 1, MPI_INT, MPI_ANY_SOURCE, NANERROR, MPI_COMM_WORLD, &status); 
-//			if (nanError == 1) {
- //                               if (debug) debug_out << "Recieved: Nan Error notification; setting abort flag." << endl;
-  //                      }
 			MPI_Recv(&done, 1, MPI_INT, MPI_ANY_SOURCE, DONE, MPI_COMM_WORLD, &status); 
 			checksum += done;
                         if (debug) debug_out << "Received: checkout from computational node" << endl;
@@ -356,6 +352,13 @@ void computeObservables(dcomp*** wfnc) {
 	MPI_Reduce(&rRMS2_re,&rRMS2_re_collect,1,MPI_DOUBLE,MPI_SUM,0,workers_comm);
 	MPI_Reduce(&rRMS2_im,&rRMS2_im_collect,1,MPI_DOUBLE,MPI_SUM,0,workers_comm);
 	rRMS2Collect = dcomp(rRMS2_re_collect,rRMS2_im_collect);
+
+    //break run if we have a nanError
+    if (rRMS2_re_collect/normalization_re_collect != rRMS2_re_collect/normalization_re_collect) {
+            nanErrorCollect = 1;
+	if (debug) debug_out << "Nan Error Detected" << endl; 
+	    MPI_Bcast(&nanErrorCollect, 1, MPI_INT, 0, workers_comm);
+    }
 }
 
 // main computational solve routine
@@ -399,13 +402,6 @@ void solve() {
 			// otherwise, record snapshot for use in excited state 
 			// computation and keep going
 			energytot =  energyCollect/normalizationCollect;
-		        //break run if we have a nanError
-                        if (real(energytot) != real(energytot)) {
-                                nanErrorCollect = 1;
-		                if (debug) debug_out << "Nan Error Detected" << endl; 
-			        MPI_Bcast(&nanErrorCollect, 1, MPI_INT, 0, workers_comm);
-                                break;
-                        }
                         if (abs(energytot-lastenergy)<TOLERANCE) {
 			        if (nodeID==1) outputMeasurements(step*EPS);
 			        break;
