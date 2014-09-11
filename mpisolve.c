@@ -146,12 +146,12 @@ int main( int argc, char *argv[] )
            cout << "Using BoxSize of " << BOXSIZE << ". Grid values: NUMX = " << NUMX << ", NUMY = " << NUMY << ", (NUMZ = " << NUMZ << ")" << endl;
         } else {
             //Find NUMX and NUMY Values. These are overwritten in the next loop if it's invoked.
-            if (ALX != 500) { //a value of 500 means unbound. Don't set the grid to separation length
-                NUMX = ceil((2*ALX+A)/A);
-            }
-            if (ALY != 500) { //a value of 500 means unbound. Don't set the grid to separation length
-                NUMY = ceil((2*ALY+A)/A);
-            }
+            //if (ALX != 500) { //a value of 500 means unbound. Don't set the grid to separation length
+            //    NUMX = ceil((2*ALX+A)/A);
+            //}
+            //if (ALY != 500) { //a value of 500 means unbound. Don't set the grid to separation length
+             //   NUMY = ceil((2*ALY+A)/A);
+           // }
 
             if ((ALY == 500) || (ALX == 500)) {
                 cout << "Unbound cluster. Grid values: NUMX = " << NUMX << ", NUMY = " << NUMY << ", (NUMZ = " << NUMZ << ")" << endl;
@@ -185,12 +185,12 @@ int main( int argc, char *argv[] )
            ALZ = ceil((A*NUMZ-A)/2);
         } else {
             //Find NUMX and NUMY Values. These are overwritten in the next loop if it's invoked.
-            if (ALX != 500) { //a value of 500 means unbound. Don't set the grid to separation length
-                NUMX = ceil((2*ALX+A)/A);
-            }
-            if (ALY != 500) { //a value of 500 means unbound. Don't set the grid to separation length
-                NUMY = ceil((2*ALY+A)/A);
-            }
+           // if (ALX != 500) { //a value of 500 means unbound. Don't set the grid to separation length
+            //    NUMX = ceil((2*ALX+A)/A);
+           // }
+           // if (ALY != 500) { //a value of 500 means unbound. Don't set the grid to separation length
+           //     NUMY = ceil((2*ALY+A)/A);
+           // }
         }
     }
 	
